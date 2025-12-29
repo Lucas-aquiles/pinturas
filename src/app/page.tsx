@@ -102,7 +102,6 @@ export default function HomePage() {
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur text-white text-sm font-semibold hover:bg-white/20 transition"
             >
               <Settings className="w-4 h-4" />
-              Admin
             </button>
           </div>
         </header>
