@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Sparkles,
   CheckCircle,
@@ -13,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   MessageCircle,
+  Settings,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -59,6 +61,17 @@ export default function HomePage() {
     );
   };
 
+  const router = useRouter();
+
+  const handleAdminAccess = () => {
+    const password = prompt("Ingresá la contraseña de administrador");
+
+    if (password === "1234") {
+      router.push("/presupuesto");
+    } else if (password !== null) {
+      alert("Contraseña incorrecta");
+    }
+  };
   return (
     <>
       {/* ================= HERO ================= */}
@@ -83,8 +96,14 @@ export default function HomePage() {
             />
             <h1 className="text-white text-xl font-bold">Pintu Pro</h1>
           </div>
-          <div className="flex items-center gap-2 text-white">
-            {/* <span className="text-sm">Lucas Manuel Echegaray</span> */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleAdminAccess}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur text-white text-sm font-semibold hover:bg-white/20 transition"
+            >
+              <Settings className="w-4 h-4" />
+              Admin
+            </button>
           </div>
         </header>
 

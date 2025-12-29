@@ -15,6 +15,7 @@ import {
   Info,
   CheckCircle,
   Printer,
+  Settings,
 } from "lucide-react";
 
 interface ServicioItem {
@@ -121,6 +122,15 @@ export default function Presupuesto() {
         >
           <RefreshCw className="w-4 h-4" /> Reiniciar
         </button>
+        <Link
+          href="/"
+          className="p-2 rounded-full hover:bg-white/20 transition text-black"
+          title="Administración"
+        >
+          <h2 className="border px-4 py-2 border-slate-200 rounded-lg text-sm hover:bg-slate-50">
+            Volver
+          </h2>{" "}
+        </Link>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
