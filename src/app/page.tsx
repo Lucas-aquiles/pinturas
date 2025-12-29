@@ -113,7 +113,7 @@ export default function HomePage() {
               href="https://wa.me/5492615650377?text=Hola!%20Quiero%20solicitar%20un%20presupuesto"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-200 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-600 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
             >
               <Calendar className="w-5 h-5" />
               Agendar Inpescción Técnica
@@ -123,16 +123,19 @@ export default function HomePage() {
           {/* Features */}
           <div className="flex gap-8 text-white">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-teal-400" />
-              <span>Presupuesto sin compromiso</span>
+              <CheckCircle
+                className="w-5 h-5 text-teal-600 "
+                strokeWidth={2.5}
+              />
+              <span className="font-semibold">Presupuesto sin compromiso</span>
             </div>
             {/* <div className="flex items-center gap-2">
               <Star className="w-5 h-5 text-teal-400" />
               <span>Profesionales certificados</span>
             </div> */}
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-teal-400" />
-              <span>Garantía de habitabilidad</span>
+              <Sparkles className="w-5 h-5 text-teal-600" strokeWidth={2.5} />
+              <span className="font-semibold">Garantía de habitabilidad</span>
             </div>
           </div>
         </main>
@@ -160,7 +163,7 @@ export default function HomePage() {
                     <img
                       src={img}
                       alt={`Galería ${index + 1}`}
-                      className="w-full h-[300px] md:h-[400px] object-cover rounded-xl shadow-lg"
+                      className="w-full h-75 md:h-100 object-cover rounded-xl shadow-lg"
                     />
                   </div>
                 ))}
@@ -259,7 +262,7 @@ export default function HomePage() {
 
             {/* Combo Mudanza */}
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow border-2 border-teal-400">
-              <div className="w-16 h-16 bg-gradient-to-br from-teal-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
+              <div className="w-16 h-16 bg-linear-to-br    from-teal-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
                 <CheckCircle className="w-8 h-8 text-teal-600" />
               </div>
               <h4 className="text-2xl font-bold text-slate-800 mb-3">
@@ -275,7 +278,7 @@ export default function HomePage() {
       </section>
 
       {/* Sección de Pasos */}
-      <section className="bg-gradient-to-br from-slate-50 to-blue-50 py-20 px-4">
+      <section className="bg-linear-to-br from-slate-50 to-blue-50 py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-4xl font-bold text-slate-800 text-center mb-4">
             Nuestro Método de Presupuesto Instantáneo
@@ -376,7 +379,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Final Section */}
-      <section className="bg-gradient-to-r bg-[#1E3A5F]/85 via-blue-800 to-slate-800 py-20 px-4">
+      <section className="bg-linear-to-r bg-[#1E3A5F]/85 via-blue-800 to-slate-800 py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-4xl md:text-5xl font-bold text-white mb-6">
             ¿Listo para transformar tu espacio?
@@ -404,10 +407,14 @@ export default function HomePage() {
       <footer className="bg-slate-900 text-slate-300 py-8 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="bg-teal-400 p-2 rounded-lg">
-              <Sparkles className="w-5 h-5 text-slate-800" />
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo.png"
+                alt="Pintu Pro Logo"
+                className="w-12 h-12 object-contain rounded-4xl"
+              />
+              <h1 className="text-white text-xl font-bold">Pintu Pro</h1>
             </div>
-            <span className="text-white text-lg font-bold">Pintu Pro</span>
           </div>
           <p className="text-sm">
             © 2025 Pintu Pro. Todos los derechos reservados.

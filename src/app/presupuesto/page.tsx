@@ -33,8 +33,8 @@ export default function Presupuesto() {
       id: 1,
       nombre: "Preparación de paredes interiores",
       costoUnitario: 2500,
-      cantidad: 20,
-      subtotal: 50000,
+      cantidad: 0,
+      subtotal: 0,
     },
     {
       id: 2,
@@ -101,7 +101,7 @@ export default function Presupuesto() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="flex justify-between items-center px-8 py-4 bg-white border-b border-slate-200">
+      <header className="print:hidden flex justify-between items-center px-8 py-4 bg-white border-b border-slate-200">
         <div className="flex items-center gap-3">
           <div className="bg-slate-800 p-2 rounded-lg">
             <Calculator className="w-6 h-6 text-white" />
@@ -117,7 +117,7 @@ export default function Presupuesto() {
         </div>
         <button
           onClick={() => window.location.reload()}
-          className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50"
+          className="flex  print:hidden items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50"
         >
           <RefreshCw className="w-4 h-4" /> Reiniciar
         </button>
@@ -125,7 +125,7 @@ export default function Presupuesto() {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Tabs de Navegación */}
-        <div className="flex gap-2 mb-8 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-fit">
+        <div className="print:hidden flex gap-2 mb-8 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-fit">
           <button
             onClick={() => setActiveTab("calcular")}
             className={`px-6 py-2 rounded-lg flex items-center gap-2 font-medium transition-all ${
@@ -444,18 +444,18 @@ export default function Presupuesto() {
               >
                 <Printer className="w-4 h-4" /> Imprimir / Guardar PDF
               </button>
-              <button className="px-6 py-2 border border-slate-200 bg-white rounded-lg flex items-center gap-2 font-medium">
+              {/* <button className="px-6 py-2 border border-slate-200 bg-white rounded-lg flex items-center gap-2 font-medium">
                 <Save className="w-4 h-4" /> Guardar en Sistema
-              </button>
+              </button> */}
               <button
                 onClick={() => setActiveTab("calcular")}
-                className="px-6 py-2 border border-slate-200 bg-white rounded-lg font-medium"
+                className=" print:hidden px-6 py-2 border border-slate-200 bg-white rounded-lg font-medium"
               >
                 Volver
               </button>
             </div>
 
-            <div className="bg-white p-12 shadow-2xl border border-slate-200 rounded-xl min-h-[1000px]">
+            <div className="bg-white p-12 shadow-2xl border border-slate-200 rounded-xl min-h-250">
               <div className="flex justify-between items-start mb-12">
                 <div>
                   <h2 className="text-3xl font-black text-slate-800 tracking-tighter uppercase">
