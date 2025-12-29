@@ -17,7 +17,19 @@ import {
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const images = ["/1.jpg", "/2.jpg", "/3.jpg", "/4.jpg", "/5.jpg", "/6.jpg"];
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,6 +38,15 @@ export default function HomePage() {
 
     return () => clearInterval(interval);
   }, [images.length]);
+
+  useEffect(() => {
+    const slidesCount = isMobile ? images.length : Math.ceil(images.length / 2);
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slidesCount);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [images.length, isMobile]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % Math.ceil(images.length / 2));
@@ -64,9 +85,6 @@ export default function HomePage() {
             <h1 className="text-white text-xl font-bold">Pintu Pro</h1>
           </div>
           <div className="flex items-center gap-2 text-white">
-            <div className="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center">
-              <span className="text-sm">LM</span>
-            </div>
             {/* <span className="text-sm">Lucas Manuel Echegaray</span> */}
           </div>
         </header>
@@ -74,7 +92,7 @@ export default function HomePage() {
         {/* Main */}
         <main className="relative z-10 flex flex-col items-center justify-center px-4 py-20">
           {/* Badge */}
-          <div className="mb-8 flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-full text-sm">
+          <div className="mb-8 flex items-center gap-2 bg-blue-900 text-white px-4 py-2 rounded-full text-sm">
             <Sparkles className="w-4 h-4" />
             <span>Tu espacio, listo para habitar</span>
           </div>
@@ -92,13 +110,15 @@ export default function HomePage() {
 
           {/* Buttons */}
           <div className="flex gap-6 mb-16">
-            <Link
-              href="/presupuesto"
-              className="bg-teal-400 hover:bg-teal-500 text-slate-800 font-semibold px-8 py-4 rounded-lg flex items-center gap-2 transition-all shadow-lg"
+            <a
+              href="https://wa.me/5492615650377?text=Hola!%20Quiero%20solicitar%20un%20presupuesto"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-200 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
             >
               <Calendar className="w-5 h-5" />
               Agendar Inpescción Técnica
-            </Link>
+            </a>
           </div>
 
           {/* Features */}
@@ -122,13 +142,12 @@ export default function HomePage() {
       {/* Galería Carrusel */}
       <section className="bg-white py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          {/* <h3 className="text-4xl font-bold text-slate-800 text-center mb-4">
-            Galería
-          </h3> */}
-
           <h3 className="text-4xl font-bold text-slate-800 text-center mb-4">
             Nuestros Trabajos
           </h3>
+          <p className="text-center text-slate-600 mb-12 text-lg">
+            Algunos de nuestros proyectos realizados
+          </p>
 
           <div className="relative max-w-6xl mx-auto">
             {/* Carrusel */}
@@ -138,11 +157,11 @@ export default function HomePage() {
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
                 {images.map((img, index) => (
-                  <div key={index} className="min-w-[50%] px-2">
+                  <div key={index} className="min-w-full md:min-w-[50%] px-2">
                     <img
                       src={img}
                       alt={`Galería ${index + 1}`}
-                      className="w-full h-[400px] object-cover rounded-xl shadow-lg"
+                      className="w-full h-[300px] md:h-[400px] object-cover rounded-xl shadow-lg"
                     />
                   </div>
                 ))}
@@ -151,36 +170,40 @@ export default function HomePage() {
               {/* Botones de navegación */}
               <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all z-10"
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
                 aria-label="Anterior"
               >
-                <ChevronLeft className="w-6 h-6 text-slate-800" />
+                <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-slate-800" />
               </button>
 
               <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all z-10"
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-2 md:p-3 rounded-full shadow-lg transition-all z-10"
                 aria-label="Siguiente"
               >
-                <ChevronRight className="w-6 h-6 text-slate-800" />
+                <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-slate-800" />
               </button>
 
               {/* Indicadores */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black/30 px-4 py-2 rounded-full">
-                {Array.from({ length: Math.ceil(images.length / 2) }).map(
-                  (_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentSlide(index)}
-                      className={`w-2.5 h-2.5 rounded-full transition-all ${
-                        index === currentSlide
-                          ? "bg-teal-400 w-8"
-                          : "bg-white/70 hover:bg-white"
-                      }`}
-                      aria-label={`Ir a par de imágenes ${index + 1}`}
-                    />
-                  )
-                )}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black/30 px-3 md:px-4 py-2 rounded-full">
+                {Array.from({
+                  length: isMobile
+                    ? images.length
+                    : Math.ceil(images.length / 2),
+                }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${
+                      index === currentSlide
+                        ? "bg-teal-400 w-6 md:w-8"
+                        : "bg-white/70 hover:bg-white"
+                    }`}
+                    aria-label={`Ir a ${
+                      isMobile ? "imagen" : "par de imágenes"
+                    } ${index + 1}`}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -353,7 +376,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Final Section */}
-      <section className="bg-gradient-to-r from-blue-700 via-blue-800 to-slate-800 py-20 px-4">
+      <section className="bg-gradient-to-r bg-[#1E3A5F]/85 via-blue-800 to-slate-800 py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-4xl md:text-5xl font-bold text-white mb-6">
             ¿Listo para transformar tu espacio?
@@ -369,7 +392,7 @@ export default function HomePage() {
               href="https://wa.me/5492615650377?text=Hola!%20Quiero%20solicitar%20un%20presupuesto"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-200 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
             >
               <MessageCircle className="w-6 h-6" />
               Contactar por WhatsApp
@@ -384,12 +407,10 @@ export default function HomePage() {
             <div className="bg-teal-400 p-2 rounded-lg">
               <Sparkles className="w-5 h-5 text-slate-800" />
             </div>
-            <span className="text-white text-lg font-bold">
-              Pintura & Brillo
-            </span>
+            <span className="text-white text-lg font-bold">Pintu Pro</span>
           </div>
           <p className="text-sm">
-            © 2024 Pintura & Brillo. Todos los derechos reservados.
+            © 2025 Pintu Pro. Todos los derechos reservados.
           </p>
         </div>
       </footer>
