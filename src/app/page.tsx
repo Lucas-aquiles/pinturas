@@ -65,23 +65,22 @@ export default function HomePage() {
       <section
         className="min-h-screen relative"
         style={{
-          backgroundImage: "url('/rodillo.jpeg')",
+          backgroundImage: "url('/2img.png')",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
         {/* Overlay SOLO del hero */}
-        <div
-          className="absolute inset-0 bg-[#1E3A5F]/85
-      "
-        ></div>
+
         {/* Header */}
         <header className="relative z-10 flex justify-between items-center px-8 py-4">
           <div className="flex items-center gap-3">
-            <div className="bg-teal-400 p-2 rounded-lg">
-              <Sparkles className="w-6 h-6 text-slate-800" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="Pintu Pro Logo"
+              className="w-12 h-12 object-contain rounded-4xl"
+            />
             <h1 className="text-white text-xl font-bold">Pintu Pro</h1>
           </div>
           <div className="flex items-center gap-2 text-white">
@@ -127,10 +126,10 @@ export default function HomePage() {
               <CheckCircle className="w-5 h-5 text-teal-400" />
               <span>Presupuesto sin compromiso</span>
             </div>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Star className="w-5 h-5 text-teal-400" />
               <span>Profesionales certificados</span>
-            </div>
+            </div> */}
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-teal-400" />
               <span>Garantía de habitabilidad</span>
@@ -145,9 +144,9 @@ export default function HomePage() {
           <h3 className="text-4xl font-bold text-slate-800 text-center mb-4">
             Nuestros Trabajos
           </h3>
-          <p className="text-center text-slate-600 mb-12 text-lg">
+          {/* <p className="text-center text-slate-600 mb-12 text-lg">
             Algunos de nuestros proyectos realizados
-          </p>
+          </p> */}
 
           <div className="relative max-w-6xl mx-auto">
             {/* Carrusel */}
@@ -227,7 +226,8 @@ export default function HomePage() {
                 Pintura Interior
               </h4>
               <p className="text-slate-600 mb-6">
-                Paredes y techos interiores con acabado profesional
+                Paredes , Techos y detalles , respetando la ambientacion
+                arquitectonica
               </p>
             </div>
 
@@ -240,7 +240,7 @@ export default function HomePage() {
                 Pintura Exterior
               </h4>
               <p className="text-slate-600 mb-6">
-                Fachadas y exteriores con pintura resistente a la intemperie
+                Fachada y exteriores que le otorguen proteccion y distincion{" "}
               </p>
             </div>
 
@@ -355,7 +355,7 @@ export default function HomePage() {
                 Personal Capacitado
               </h4>
               <p className="text-slate-600 text-sm">
-                Profesionales certificados y experimentados
+                Profesionales experimentados
               </p>
             </div>
 
