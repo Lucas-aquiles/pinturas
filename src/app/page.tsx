@@ -279,12 +279,12 @@ export default function HomePage() {
             </div>
 
             {/* Combo Mudanza */}
-            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow border-2 border-teal-400">
-              <div className="w-16 h-16 bg-linear-to-br    from-teal-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow ">
+              <div className="w-16 h-16 bg-linear-to-br  from-teal-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
                 <CheckCircle className="w-8 h-8 text-teal-600" />
               </div>
               <h4 className="text-2xl font-bold text-slate-800 mb-3">
-                Combo Mudanza
+                Combo Pintura + Limpieza
               </h4>
               <p className="text-slate-600 mb-6">
                 Pintura completa + Limpieza final. La solución todo-en-uno. para
@@ -363,7 +363,8 @@ export default function HomePage() {
                 Presupuestos Precisos
               </h4>
               <p className="text-slate-600 text-sm">
-                Medición digital exacta y costos transparentes
+                Detalles de alcances e instrucciones para lograr la mayor
+                eficiencia al menor costo
               </p>
             </div>
 
@@ -376,7 +377,7 @@ export default function HomePage() {
                 Personal Capacitado
               </h4>
               <p className="text-slate-600 text-sm">
-                Profesionales experimentados
+                Personal comprometido e idoneo que cuidara los detalles
               </p>
             </div>
 
@@ -403,8 +404,8 @@ export default function HomePage() {
             ¿Listo para transformar tu espacio?
           </h3>
           <p className="text-xl text-blue-100 mb-10">
-            Obtén un presupuesto personalizado en menos de 2 minutos. Sin
-            compromiso, sin complicaciones.
+            Obtén un presupuesto personalizado . Sin compromiso, sin
+            complicaciones.
           </p>
 
           {/* Botones */}
@@ -413,7 +414,7 @@ export default function HomePage() {
               href="https://wa.me/5492615650377?text=Hola!%20Quiero%20solicitar%20un%20presupuesto"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-200 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-700 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
             >
               <MessageCircle className="w-6 h-6" />
               Contactar por WhatsApp
