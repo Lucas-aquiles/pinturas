@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Sparkles,
@@ -18,35 +17,17 @@ import {
 } from "lucide-react";
 
 export default function HomePage() {
+  const router = useRouter();
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const images = ["/1.jpg", "/2.jpg", "/3.jpg", "/4.jpg", "/5.jpg", "/6.jpg"];
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % Math.ceil(images.length / 2));
-    }, 4000); // Cambia cada 4 segundos
-
-    return () => clearInterval(interval);
-  }, [images.length]);
 
   useEffect(() => {
     const slidesCount = isMobile ? images.length : Math.ceil(images.length / 2);
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slidesCount);
     }, 4000);
-
     return () => clearInterval(interval);
   }, [images.length, isMobile]);
 
@@ -61,17 +42,18 @@ export default function HomePage() {
     );
   };
 
-  const router = useRouter();
-
   const handleAdminAccess = () => {
     const password = prompt("Ingresá la contraseña de administrador");
 
-    if (password === "1234") {
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+      // Guardar en cookie que está autenticado
+      document.cookie = "admin-auth=true; path=/; max-age=86400"; // 24 horas
       router.push("/presupuesto");
     } else if (password !== null) {
       alert("Contraseña incorrecta");
     }
   };
+
   return (
     <>
       {/* ================= HERO ================= */}

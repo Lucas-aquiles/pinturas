@@ -16,7 +16,9 @@ import {
   CheckCircle,
   Printer,
   Settings,
+  LogOut,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface ServicioItem {
   id: number;
@@ -27,6 +29,8 @@ interface ServicioItem {
 }
 
 export default function Presupuesto() {
+  const router = useRouter();
+
   const [activeTab, setActiveTab] = useState<"calcular" | "ver">("calcular");
 
   const [servicios, setServicios] = useState<ServicioItem[]>([
@@ -99,10 +103,16 @@ export default function Presupuesto() {
     servicios.reduce((total, servicio) => total + servicio.cantidad, 0);
   const serviciosSeleccionados = servicios.filter((s) => s.cantidad > 0);
 
+  const cerrarSesion = () => {
+    document.cookie = "admin-auth=; path=/; max-age=0"; // Eliminar cookie
+    router.push("/");
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="print:hidden flex justify-between items-center px-8 py-4 bg-white border-b border-slate-200">
+      <header className="print:hidden flex items-center justify-between px-8 py-4 bg-white border-b border-slate-200">
+        {/* Izquierda: Logo + título */}
         <div className="flex items-center gap-3">
           <div className="bg-slate-800 p-2 rounded-lg">
             <Calculator className="w-6 h-6 text-white" />
@@ -116,21 +126,33 @@ export default function Presupuesto() {
             </p>
           </div>
         </div>
-        <button
-          onClick={() => window.location.reload()}
-          className="flex  print:hidden items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50"
-        >
-          <RefreshCw className="w-4 h-4" /> Reiniciar
-        </button>
-        <Link
-          href="/"
-          className="p-2 rounded-full hover:bg-white/20 transition text-black"
-          title="Administración"
-        >
-          <h2 className="border px-4 py-2 border-slate-200 rounded-lg text-sm hover:bg-slate-50">
+
+        {/* Derecha: Acciones */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => window.location.reload()}
+            className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Reiniciar
+          </button>
+
+          <Link
+            href="/"
+            className="flex items-center px-4 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition text-slate-800"
+            title="Administración"
+          >
             Volver
-          </h2>{" "}
-        </Link>
+          </Link>
+
+          <button
+            onClick={cerrarSesion}
+            className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
+          >
+            <LogOut className="w-4 h-4" />
+            Cerrar sesión
+          </button>
+        </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
