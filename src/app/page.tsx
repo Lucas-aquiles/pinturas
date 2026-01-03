@@ -1,29 +1,29 @@
 import HomeClient from "./HomeClient";
 
 export const metadata = {
-  title: "Pintu Pro | Pintura y Limpieza Final de Obra en Mendoza",
+  title: "ObraLista | ObraListara y Limpieza Final de Obra en Mendoza",
   description:
-    "Especialistas en pintura interior, exterior y limpieza fina post-obra en Mendoza. Presupuesto inmediato y visita técnica sin compromiso.",
+    "Especialistas en ObraListara interior, exterior y limpieza fina post-obra en Mendoza. Presupuesto inmediato y visita técnica sin compromiso.",
   keywords: [
-    "pintura en Mendoza",
+    "ObraListara en Mendoza",
     "pintores profesionales",
     "limpieza final de obra",
-    "pintura interior",
-    "pintura exterior",
-    "presupuesto pintura",
+    "ObraLista interior",
+    "ObraLista exterior",
+    "presupuesto ObraLista",
   ],
   openGraph: {
-    title: "Pintu Pro | Pintura y Limpieza Profesional",
+    title: "obra lista | ObraListara y Limpieza Profesional",
     description:
-      "Pintura y limpieza final de obra con presupuesto inmediato en Mendoza.",
+      "ObraListara y limpieza final de obra con presupuesto inmediato en Mendoza.",
     url: "https://tudominio.com",
-    siteName: "Pintu Pro",
+    siteName: "Obra Lista",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Pintu Pro - Pintura Profesional",
+        alt: "Obra Lista - ObraListara Profesional",
       },
     ],
     locale: "es_AR",
@@ -44,9 +44,9 @@ export default function Page() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
-            name: "Pintu Pro",
+            name: "ObraLista ",
             description:
-              "Pintura y limpieza final de obra con presupuesto inmediato",
+              "ObraListara y limpieza final de obra con presupuesto inmediato",
             areaServed: "Mendoza, Argentina",
             telephone: "+54 9 261 565-0377",
             url: "https://tudominio.com",

@@ -73,10 +73,10 @@ export default function HomeClient() {
           <div className="flex items-center gap-3">
             <img
               src="/logo.png"
-              alt="Pintu Pro - Pintura y Limpieza Profesional en Mendoza"
+              alt="ObraLista Pro - ObraListara y Limpieza Profesional en Mendoza"
               className="w-12 h-12 object-contain rounded-4xl"
             />
-            <h1 className="text-white text-xl font-bold">Pintu Pro</h1>
+            <h1 className="text-white text-xl font-bold">Obra Lista </h1>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -98,13 +98,13 @@ export default function HomeClient() {
 
           {/* Title */}
           <h2 className="text-6xl font-bold text-white mb-6 text-center">
-            Pintu Pro
+            Obra Lista
           </h2>
 
           {/* Subtitle */}
           <p className="text-xl text-white text-center max-w-3xl mb-12 leading-relaxed">
-            Especialistas en Pintura y Limpieza Final de Obra. Agendá tu visita
-            online y recibí tu presupuesto detallado EN EL ACTO
+            Especialistas en Obra Lista y Limpieza Final de Obra. Agendá tu
+            visita online y recibí tu presupuesto detallado EN EL ACTO
           </p>
 
           {/* Buttons */}
@@ -220,13 +220,13 @@ export default function HomeClient() {
           </h3>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Pintura Interior */}
+            {/* ObraListara Interior */}
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
                 <BrushCleaning className="w-8 h-8 text-blue-700" />
               </div>
               <h4 className="text-2xl font-bold text-slate-800 mb-3">
-                Pintura Interior
+                Obra Lista Interior
               </h4>
               <p className="text-slate-600 mb-6">
                 Paredes , Techos y detalles , respetando la ambientacion
@@ -234,16 +234,16 @@ export default function HomeClient() {
               </p>
             </div>
 
-            {/* Pintura Exterior */}
+            {/* ObraListara Exterior */}
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
               <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
                 <HomeIcon className="w-8 h-8 text-slate-700" />
               </div>
               <h4 className="text-2xl font-bold text-slate-800 mb-3">
-                Pintura Exterior
+                Obra Lista Exterior
               </h4>
               <p className="text-slate-600 mb-6">
-                Fachada y exteriores que le otorguen proteccion y distincion{" "}
+                Fachada y exteriores que le otorguen proteccion y distincion
               </p>
             </div>
 
@@ -266,11 +266,11 @@ export default function HomeClient() {
                 <CheckCircle className="w-8 h-8 text-teal-600" />
               </div>
               <h4 className="text-2xl font-bold text-slate-800 mb-3">
-                Combo Pintura + Limpieza
+                Combo Obra Lista + Limpieza
               </h4>
               <p className="text-slate-600 mb-6">
-                Pintura completa + Limpieza final. La solución todo-en-uno. para
-                dejar tu espacio listo para habitar
+                Obra Lista completa + Limpieza final. La solución todo-en-uno.
+                para dejar tu espacio listo para habitar
               </p>
             </div>
           </div>
@@ -411,14 +411,14 @@ export default function HomeClient() {
             <div className="flex items-center gap-3">
               <img
                 src="/logo.png"
-                alt="Pintu Pro Logo"
+                alt="ObraLista Pro Logo"
                 className="w-12 h-12 object-contain rounded-4xl"
               />
-              <h1 className="text-white text-xl font-bold">Pintu Pro</h1>
+              <h1 className="text-white text-xl font-bold">Obra Lista</h1>
             </div>
           </div>
           <p className="text-sm">
-            © 2025 Pintu Pro. Todos los derechos reservados.
+            © 2025 Obra Lista . Todos los derechos reservados.
           </p>
         </div>
       </footer>

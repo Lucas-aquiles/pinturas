@@ -43,7 +43,7 @@ export default function Presupuesto() {
     },
     {
       id: 2,
-      nombre: "Pintura de Paredes Interiores",
+      nombre: "Obra Lista de Paredes Interiores",
       costoUnitario: 6500,
       cantidad: 0,
       subtotal: 0,
@@ -57,14 +57,14 @@ export default function Presupuesto() {
     },
     {
       id: 4,
-      nombre: "Pintura de Paredes exteriores",
+      nombre: "Obra Lista de Paredes exteriores",
       costoUnitario: 6800,
       cantidad: 0,
       subtotal: 0,
     },
     {
       id: 5,
-      nombre: "Pintura de techo",
+      nombre: "Obra Lista de techo",
       costoUnitario: 7200,
       cantidad: 0,
       subtotal: 0,
@@ -122,7 +122,7 @@ export default function Presupuesto() {
               Simulador de Costos
             </h1>
             <p className="text-xs text-slate-500">
-              Servicios de Pintura para Obras Civiles
+              Servicios de Obra Lista para Obras Civiles
             </p>
           </div>
         </div>
@@ -184,12 +184,12 @@ export default function Presupuesto() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Columna Izquierda: Imagen 1 y 2 combinadas */}
             <div className="lg:col-span-2 space-y-8">
-              {/* SECCIÓN 1: Servicios de Pintura */}
+              {/* SECCIÓN 1: Servicios de ObraListara */}
               <section className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="p-6 border-b border-slate-100 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-slate-700" />
                   <h3 className="font-bold text-slate-800">
-                    Servicios de Pintura
+                    Servicios de Obra Lista
                   </h3>
                 </div>
                 <div className="p-6">
@@ -494,7 +494,7 @@ export default function Presupuesto() {
                     Presupuesto
                   </h2>
                   <p className="text-slate-500 text-sm">
-                    Servicios de Pintura para Obras Civiles
+                    Servicios de Obra Lista para Obras Civiles
                   </p>
                 </div>
                 <div className="text-right">
