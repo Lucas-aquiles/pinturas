@@ -17,6 +17,8 @@ import {
   Printer,
   Settings,
   LogOut,
+  Edit2,
+  DollarSign,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -31,41 +33,122 @@ interface ServicioItem {
 export default function Presupuesto() {
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState<"calcular" | "ver">("calcular");
+  const [activeTab, setActiveTab] = useState<"calcular" | "ver" | "config">(
+    "calcular"
+  );
+  const [editandoCostos, setEditandoCostos] = useState(false);
 
   const [servicios, setServicios] = useState<ServicioItem[]>([
     {
       id: 1,
-      nombre: "Preparación de paredes interiores",
-      costoUnitario: 2500,
+      nombre:
+        "Preparación de paredes interiores (Enduido completo y lijado técnico)",
+      costoUnitario: 0,
       cantidad: 0,
       subtotal: 0,
     },
     {
       id: 2,
-      nombre: "Obra Lista de Paredes Interiores",
-      costoUnitario: 6500,
+      nombre: "Pintura de Paredes Interiores (Látex Satinado/Mate Premium)",
+      costoUnitario: 0,
       cantidad: 0,
       subtotal: 0,
     },
     {
       id: 3,
-      nombre: "Preparación de paredes exteriores",
-      costoUnitario: 2900,
+      nombre: "Pintura de Cielorrasos (Látex Antihongo)",
+      costoUnitario: 0,
       cantidad: 0,
       subtotal: 0,
     },
     {
       id: 4,
-      nombre: "Obra Lista de Paredes exteriores",
-      costoUnitario: 6800,
+      nombre: "Tratamiento de juntas en construcción en seco (Durlock)",
+      costoUnitario: 0,
       cantidad: 0,
       subtotal: 0,
     },
     {
       id: 5,
-      nombre: "Obra Lista de techo",
-      costoUnitario: 7200,
+      nombre: "Pintura de Zócalos (Metros lineales)",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 6,
+      nombre: "Lacado/Esmaltado de puertas y marcos (Unidad)",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 7,
+      nombre: "Barnizado/Cetol en cielorrasos de madera y vigas",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 8,
+      nombre: "Esmaltado de herrería fina (Barandas y rejas,etc)",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 9,
+      nombre: "Hidrolavado profundo de fachadas y muros externos",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 10,
+      nombre: "Tratamiento de grietas y fisuras con sellador elastomérico",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 11,
+      nombre: "Aplicación de Revestimiento Plástico (Tipo Tarquini/Revear)",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 12,
+      nombre: "Pintura Impermeabilizante de muros exteriores",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 13,
+      nombre: "Tratamiento de Decks de madera (Protectores/Aceites)",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 14,
+      nombre: "Armado de andamiaje y trabajos en doble altura",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 15,
+      nombre: "Limpieza fina de obra y entrega de unidad",
+      costoUnitario: 0,
+      cantidad: 0,
+      subtotal: 0,
+    },
+    {
+      id: 16,
+      nombre: "Otros trabajos",
+      costoUnitario: 0,
       cantidad: 0,
       subtotal: 0,
     },
@@ -97,6 +180,22 @@ export default function Presupuesto() {
     );
   };
 
+  const actualizarCostoUnitario = (id: number, costo: number) => {
+    setServicios(
+      servicios.map((servicio) => {
+        if (servicio.id === id) {
+          const nuevoCosto = Math.max(0, costo);
+          return {
+            ...servicio,
+            costoUnitario: nuevoCosto,
+            subtotal: nuevoCosto * servicio.cantidad,
+          };
+        }
+        return servicio;
+      })
+    );
+  };
+
   const calcularTotal = () =>
     servicios.reduce((total, servicio) => total + servicio.subtotal, 0);
   const calcularM2Totales = () =>
@@ -104,7 +203,7 @@ export default function Presupuesto() {
   const serviciosSeleccionados = servicios.filter((s) => s.cantidad > 0);
 
   const cerrarSesion = () => {
-    document.cookie = "admin-auth=; path=/; max-age=0"; // Eliminar cookie
+    document.cookie = "admin-auth=; path=/; max-age=0";
     router.push("/");
   };
 
@@ -112,7 +211,6 @@ export default function Presupuesto() {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="print:hidden flex items-center justify-between px-8 py-4 bg-white border-b border-slate-200">
-        {/* Izquierda: Logo + título */}
         <div className="flex items-center gap-3">
           <div className="bg-slate-800 p-2 rounded-lg">
             <Calculator className="w-6 h-6 text-white" />
@@ -127,7 +225,6 @@ export default function Presupuesto() {
           </div>
         </div>
 
-        {/* Derecha: Acciones */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => window.location.reload()}
@@ -169,6 +266,16 @@ export default function Presupuesto() {
             <Calculator className="w-4 h-4" /> Calcular
           </button>
           <button
+            onClick={() => setActiveTab("config")}
+            className={`px-6 py-2 rounded-lg flex items-center gap-2 font-medium transition-all ${
+              activeTab === "config"
+                ? "bg-slate-800 text-white"
+                : "text-slate-600 hover:bg-slate-50"
+            }`}
+          >
+            <Settings className="w-4 h-4" /> Configurar Precios
+          </button>
+          <button
             onClick={() => setActiveTab("ver")}
             className={`px-6 py-2 rounded-lg flex items-center gap-2 font-medium transition-all ${
               activeTab === "ver"
@@ -180,17 +287,102 @@ export default function Presupuesto() {
           </button>
         </div>
 
-        {activeTab === "calcular" ? (
+        {activeTab === "config" ? (
+          /* SECCIÓN DE CONFIGURACIÓN DE PRECIOS */
+          <div className="max-w-5xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-slate-700" />
+                  <h3 className="font-bold text-slate-800">
+                    Configuración de Precios Unitarios
+                  </h3>
+                </div>
+                <p className="text-sm text-slate-500">
+                  Actualiza los precios según la inflación semanal
+                </p>
+              </div>
+              <div className="p-6">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-slate-400 border-b border-slate-100">
+                        <th className="text-left pb-4 font-medium w-12">
+                          Ítem
+                        </th>
+                        <th className="text-left pb-4 font-medium">
+                          Descripción del Servicio
+                        </th>
+                        <th className="text-right pb-4 font-medium w-48">
+                          Costo Unitario ($/m²)
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                      {servicios.map((s, i) => (
+                        <tr key={s.id}>
+                          <td className="py-4">
+                            <span className="bg-slate-800 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold">
+                              {i + 1}
+                            </span>
+                          </td>
+                          <td className="py-4 font-medium text-slate-700 pr-4">
+                            {s.nombre}
+                          </td>
+                          <td className="py-4">
+                            <div className="relative max-w-xs ml-auto">
+                              <span className="absolute left-3 top-3 text-slate-400 font-bold">
+                                $
+                              </span>
+                              <input
+                                type="number"
+                                value={s.costoUnitario || ""}
+                                onChange={(e) =>
+                                  actualizarCostoUnitario(
+                                    s.id,
+                                    parseFloat(e.target.value) || 0
+                                  )
+                                }
+                                className="w-full pl-8 pr-4 py-2 border border-slate-200 rounded-lg text-right font-bold text-slate-800 focus:ring-2 focus:ring-slate-800 outline-none"
+                                placeholder="0.00"
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="mt-6 flex justify-end gap-3">
+                  <button
+                    onClick={() => setActiveTab("calcular")}
+                    className="px-6 py-3 bg-slate-800 text-white rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-slate-700 transition-colors"
+                  >
+                    <CheckCircle className="w-5 h-5" /> Guardar y Continuar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === "calcular" ? (
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Columna Izquierda: Imagen 1 y 2 combinadas */}
             <div className="lg:col-span-2 space-y-8">
               {/* SECCIÓN 1: Servicios de ObraListara */}
               <section className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="p-6 border-b border-slate-100 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-slate-700" />
-                  <h3 className="font-bold text-slate-800">
-                    Servicios de Obra Lista
-                  </h3>
+                <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-slate-700" />
+                    <h3 className="font-bold text-slate-800">
+                      Servicios de Obra Lista
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab("config")}
+                    className="text-sm text-slate-600 hover:text-slate-800 flex items-center gap-1"
+                  >
+                    <Edit2 className="w-4 h-4" /> Editar Precios
+                  </button>
                 </div>
                 <div className="p-6">
                   <p className="text-sm text-slate-500 mb-6">
@@ -227,7 +419,13 @@ export default function Presupuesto() {
                               {s.nombre}
                             </td>
                             <td className="py-4 text-right text-slate-500">
-                              $ {s.costoUnitario.toLocaleString()}/m²
+                              {s.costoUnitario > 0 ? (
+                                `$ ${s.costoUnitario.toLocaleString()}/m²`
+                              ) : (
+                                <span className="text-orange-500 text-xs">
+                                  Sin precio
+                                </span>
+                              )}
                             </td>
                             <td className="py-4">
                               <input
@@ -423,17 +621,23 @@ export default function Presupuesto() {
                     <Calculator className="w-4 h-4" /> Resumen del Presupuesto
                   </div>
                   <div className="space-y-4 mb-8">
-                    {serviciosSeleccionados.map((s) => (
-                      <div
-                        key={s.id}
-                        className="flex justify-between text-sm border-b border-white/10 pb-2"
-                      >
-                        <span className="opacity-70">{s.nombre}</span>
-                        <span className="font-bold">
-                          $ {s.subtotal.toLocaleString()}
-                        </span>
-                      </div>
-                    ))}
+                    {serviciosSeleccionados.length > 0 ? (
+                      serviciosSeleccionados.map((s) => (
+                        <div
+                          key={s.id}
+                          className="flex justify-between text-sm border-b border-white/10 pb-2"
+                        >
+                          <span className="opacity-70 text-xs">{s.nombre}</span>
+                          <span className="font-bold">
+                            $ {s.subtotal.toLocaleString()}
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-sm opacity-60 text-center py-4">
+                        No hay servicios seleccionados
+                      </p>
+                    )}
                   </div>
                   <div className="border-t border-white/20 pt-4 space-y-4">
                     <div className="flex justify-between text-xs opacity-60">
@@ -448,10 +652,12 @@ export default function Presupuesto() {
                         $ {calcularTotal().toLocaleString()}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-[10px] text-emerald-400 bg-emerald-400/10 p-2 rounded-lg mt-4">
-                      <CheckCircle className="w-3 h-3" /> Presupuesto calculado
-                      correctamente
-                    </div>
+                    {calcularTotal() > 0 && (
+                      <div className="flex items-center gap-2 text-[10px] text-emerald-400 bg-emerald-400/10 p-2 rounded-lg mt-4">
+                        <CheckCircle className="w-3 h-3" /> Presupuesto
+                        calculado correctamente
+                      </div>
+                    )}
                   </div>
                 </div>
                 <button
@@ -476,12 +682,9 @@ export default function Presupuesto() {
               >
                 <Printer className="w-4 h-4" /> Imprimir / Guardar PDF
               </button>
-              {/* <button className="px-6 py-2 border border-slate-200 bg-white rounded-lg flex items-center gap-2 font-medium">
-                <Save className="w-4 h-4" /> Guardar en Sistema
-              </button> */}
               <button
                 onClick={() => setActiveTab("calcular")}
-                className=" print:hidden px-6 py-2 border border-slate-200 bg-white rounded-lg font-medium"
+                className="print:hidden px-6 py-2 border border-slate-200 bg-white rounded-lg font-medium"
               >
                 Volver
               </button>
@@ -502,10 +705,15 @@ export default function Presupuesto() {
                     N° Presupuesto
                   </p>
                   <p className="text-lg font-black text-slate-800">
-                    PRES-530904
+                    PRES-{Math.floor(Math.random() * 900000) + 100000}
                   </p>
                   <p className="text-xs text-slate-500 mt-1">
-                    Fecha: 29 de diciembre de 2025
+                    Fecha:{" "}
+                    {new Date().toLocaleDateString("es-AR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </p>
                 </div>
               </div>
@@ -638,13 +846,32 @@ export default function Presupuesto() {
                 </div>
               </div>
 
+              {observaciones && (
+                <div className="mb-12">
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
+                    Observaciones Adicionales
+                  </h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {observaciones}
+                  </p>
+                </div>
+              )}
+
               <div className="mt-20 pt-12 border-t border-slate-100 flex justify-between items-end">
                 <div>
                   <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">
                     Validez del presupuesto
                   </p>
                   <p className="text-xs font-bold text-slate-800">
-                    15 días (hasta el 13 de enero de 2026)
+                    {validezDias} días (hasta el{" "}
+                    {new Date(
+                      Date.now() + validezDias * 24 * 60 * 60 * 1000
+                    ).toLocaleDateString("es-AR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                    )
                   </p>
                 </div>
                 <div className="w-48 border-t border-slate-300 pt-2 text-center">
