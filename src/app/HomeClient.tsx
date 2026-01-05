@@ -116,7 +116,7 @@ export default function HomeClient() {
               className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-600 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
             >
               <Calendar className="w-5 h-5" />
-              Agendar Inpescción Técnica
+              Contactar visita presupuesto
             </a>
           </div>
 
@@ -399,7 +399,7 @@ export default function HomeClient() {
               className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-700 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
             >
               <MessageCircle className="w-6 h-6" />
-              Contactar por WhatsApp
+              Contactar visita presupuesto
             </a>
           </div>
         </div>
