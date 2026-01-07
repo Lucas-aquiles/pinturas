@@ -68,7 +68,8 @@ export default function HomeClient() {
       >
         {/* Overlay SOLO del hero */}
 
-        {/* Header */}
+        {/* Header                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur text-white text-sm font-semibold hover:bg-white/20 transition"
+         */}
         <header className="relative z-10 flex justify-between items-center px-8 py-4">
           <div className="flex items-center gap-3">
             <img
@@ -81,9 +82,9 @@ export default function HomeClient() {
           <div className="flex items-center gap-3">
             <button
               onClick={handleAdminAccess}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 backdrop-blur text-white text-sm font-semibold hover:bg-white/20 transition"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/0 text-white/0 hover:bg-white/0 hover:text-white/0 transition opacity-0"
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="w-10 h-8 opacity-0" />
             </button>
           </div>
         </header>
