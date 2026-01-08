@@ -368,7 +368,7 @@ export default function Presupuesto() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Columna Izquierda: Imagen 1 y 2 combinadas */}
             <div className="lg:col-span-2 space-y-8">
-              {/* SECCIÓN 1: Servicios de ObraListara */}
+              {/* SECCIÓN 1: Servicios de ObraLista */}
               <section className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                   <div className="flex items-center gap-2">

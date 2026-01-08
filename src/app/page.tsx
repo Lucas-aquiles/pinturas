@@ -1,11 +1,11 @@
 import HomeClient from "./HomeClient";
 
 export const metadata = {
-  title: "ObraLista | ObraListara y Limpieza Final de Obra en Mendoza",
+  title: "ObraLista | ObraLista y Limpieza Final de Obra en Mendoza",
   description:
-    "Especialistas en ObraListara interior, exterior y limpieza fina post-obra en Mendoza. Presupuesto inmediato y visita técnica sin compromiso.",
+    "Especialistas en Obra Lista interior, exterior y limpieza fina post-obra en Mendoza. Presupuesto inmediato y visita técnica sin compromiso.",
   keywords: [
-    "ObraListara en Mendoza",
+    "ObraLista en Mendoza",
     "pintores profesionales",
     "limpieza final de obra",
     "ObraLista interior",
@@ -13,17 +13,17 @@ export const metadata = {
     "presupuesto ObraLista",
   ],
   openGraph: {
-    title: "obra lista | ObraListara y Limpieza Profesional",
+    title: "obra lista | ObraLista y Limpieza Profesional",
     description:
-      "ObraListara y limpieza final de obra con presupuesto inmediato en Mendoza.",
-    url: "https://tudominio.com",
+      "ObraLista y limpieza final de obra con presupuesto inmediato en Mendoza.",
+    url: "https://obralista.com.ar/",
     siteName: "Obra Lista",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Obra Lista - ObraListara Profesional",
+        alt: "Obra Lista - ObraLista Profesional",
       },
     ],
     locale: "es_AR",
@@ -45,11 +45,10 @@ export default function Page() {
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             name: "ObraLista ",
-            description:
-              "ObraListara y limpieza final de obra con presupuesto inmediato",
+            description: "ObraLista y limpieza final de obra con presupuesto ",
             areaServed: "Mendoza, Argentina",
             telephone: "+54 9 261 565-0377",
-            url: "https://tudominio.com",
+            url: "https://obralista.com.ar/",
           }),
         }}
       />

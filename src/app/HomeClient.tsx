@@ -74,7 +74,7 @@ export default function HomeClient() {
           <div className="flex items-center gap-3">
             <img
               src="/logo.png"
-              alt="ObraLista Pro - ObraListara y Limpieza Profesional en Mendoza"
+              alt="ObraLista Pro - ObraLista y Limpieza Profesional en Mendoza"
               className="w-12 h-12 object-contain rounded-4xl"
             />
             <h1 className="text-white text-xl font-bold">Obra Lista </h1>
