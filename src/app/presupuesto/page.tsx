@@ -210,7 +210,7 @@ export default function Presupuesto() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="print:hidden flex items-center justify-between px-8 py-4 bg-white border-b border-slate-200">
+      <header className="print:hidden flex flex-wrap items-center justify-between gap-4 px-8 py-4 bg-white border-b border-slate-200">
         <div className="flex items-center gap-3">
           <div className="bg-slate-800 p-2 rounded-lg">
             <Calculator className="w-6 h-6 text-white" />
@@ -225,18 +225,18 @@ export default function Presupuesto() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3 justify-center sm:justify-end w-full sm:w-auto">
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition"
+            className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-3 h-4" />
             Reiniciar
           </button>
 
           <Link
             href="/"
-            className="flex items-center px-4 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition text-slate-800"
+            className="flex items-center px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition text-slate-800"
             title="Administración"
           >
             Volver
@@ -244,9 +244,9 @@ export default function Presupuesto() {
 
           <button
             onClick={cerrarSesion}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
+            className="flex items-center gap-2 px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-3 h-4" />
             Cerrar sesión
           </button>
         </div>
@@ -254,7 +254,7 @@ export default function Presupuesto() {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Tabs de Navegación */}
-        <div className="print:hidden flex gap-2 mb-8 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-fit">
+        <div className="print:hidden flex flex-wrap gap-2 mb-8 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-full max-w-max sm:w-fit justify-center sm:justify-start">
           <button
             onClick={() => setActiveTab("calcular")}
             className={`px-6 py-2 rounded-lg flex items-center gap-2 font-medium transition-all ${

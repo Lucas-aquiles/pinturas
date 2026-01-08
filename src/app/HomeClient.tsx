@@ -220,8 +220,8 @@ export default function HomeClient() {
             Nuestros Servicios
           </h3>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* ObraListara Interior */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            {/* Obra Lista Interior */}
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
                 <BrushCleaning className="w-8 h-8 text-blue-700" />
@@ -230,12 +230,12 @@ export default function HomeClient() {
                 Obra Lista Interior
               </h4>
               <p className="text-slate-600 mb-6">
-                Paredes , Techos y detalles , respetando la ambientacion
-                arquitectonica
+                Paredes, Techos y detalles, respetando la ambientación
+                arquitectónica
               </p>
             </div>
 
-            {/* ObraListara Exterior */}
+            {/* Obra Lista Exterior */}
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
               <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
                 <HomeIcon className="w-8 h-8 text-slate-700" />
@@ -244,7 +244,7 @@ export default function HomeClient() {
                 Obra Lista Exterior
               </h4>
               <p className="text-slate-600 mb-6">
-                Fachada y exteriores que le otorguen proteccion y distincion
+                Fachada y exteriores que le otorguen protección y distinción
               </p>
             </div>
 
@@ -262,16 +262,30 @@ export default function HomeClient() {
             </div>
 
             {/* Combo Mudanza */}
-            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow ">
-              <div className="w-16 h-16 bg-linear-to-br  from-teal-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="w-16 h-16 bg-linear-to-br from-teal-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
                 <CheckCircle className="w-8 h-8 text-teal-600" />
               </div>
               <h4 className="text-2xl font-bold text-slate-800 mb-3">
                 Combo Obra Lista + Limpieza
               </h4>
               <p className="text-slate-600 mb-6">
-                Obra Lista completa + Limpieza final. La solución todo-en-uno.
+                Obra Lista completa + Limpieza final. La solución todo-en-uno
                 para dejar tu espacio listo para habitar
+              </p>
+            </div>
+
+            {/* Venta Inmobiliaria */}
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="w-16 h-16 bg-linear-to-br from-teal-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
+                <CheckCircle className="w-8 h-8 text-teal-600" />
+              </div>
+              <h4 className="text-2xl font-bold text-slate-800 mb-3">
+                Obra Lista "Venta Inmobiliaria"
+              </h4>
+              <p className="text-slate-600 mb-6">
+                Nos encargamos de dejar tu inmueble de la mejor manera para que
+                puedas venderla mejor y más rápido
               </p>
             </div>
           </div>
