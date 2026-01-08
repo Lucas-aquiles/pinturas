@@ -14,6 +14,8 @@ import {
   ChevronRight,
   MessageCircle,
   Settings,
+  House,
+  HousePlus,
 } from "lucide-react";
 
 export default function HomeClient() {
@@ -278,7 +280,7 @@ export default function HomeClient() {
             {/* Venta Inmobiliaria */}
             <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
               <div className="w-16 h-16 bg-linear-to-br from-teal-100 to-blue-100 rounded-full flex items-center justify-center mb-6">
-                <CheckCircle className="w-8 h-8 text-teal-600" />
+                <HousePlus className="w-8 h-8 text-teal-600" />
               </div>
               <h4 className="text-2xl font-bold text-slate-800 mb-3">
                 Obra Lista "Venta Inmobiliaria"
