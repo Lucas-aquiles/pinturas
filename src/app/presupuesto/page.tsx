@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -33,12 +33,14 @@ interface ServicioItem {
 export default function Presupuesto() {
   const router = useRouter();
 
+  // Estados principales
   const [activeTab, setActiveTab] = useState<"calcular" | "ver" | "config">(
     "calcular"
   );
-  const [editandoCostos, setEditandoCostos] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false); // Para evitar errores de hidratación
 
-  const [servicios, setServicios] = useState<ServicioItem[]>([
+  // Lista base de servicios
+  const serviciosBase: ServicioItem[] = [
     {
       id: 1,
       nombre:
@@ -152,60 +154,80 @@ export default function Presupuesto() {
       cantidad: 0,
       subtotal: 0,
     },
-  ]);
+  ];
 
+  const [servicios, setServicios] = useState<ServicioItem[]>(serviciosBase);
   const [datosCliente, setDatosCliente] = useState({
     nombre: "",
     direccion: "",
     telefono: "",
     email: "",
   });
-
   const [observaciones, setObservaciones] = useState("");
   const [validezDias, setValidezDias] = useState(15);
 
+  // 1. CARGAR PRECIOS DESDE LOCAL STORAGE AL INICIAR
+  useEffect(() => {
+    const preciosGuardados = localStorage.getItem("preciosServicios");
+    if (preciosGuardados) {
+      try {
+        setServicios(JSON.parse(preciosGuardados));
+      } catch (e) {
+        console.error("Error al cargar precios", e);
+      }
+    }
+    setIsLoaded(true);
+  }, []);
+
+  // 2. FUNCIÓN PARA GUARDAR PRECIOS EN LOCAL STORAGE
+  const guardarPreciosEnStorage = (datosALog: ServicioItem[]) => {
+    localStorage.setItem("preciosServicios", JSON.stringify(datosALog));
+  };
+
+  const guardarYContinuar = () => {
+    guardarPreciosEnStorage(servicios);
+    setActiveTab("calcular");
+    alert("¡Precios guardados correctamente!");
+  };
+
+  // Lógica de actualización
   const actualizarCantidad = (id: number, cantidad: number) => {
-    setServicios(
-      servicios.map((servicio) => {
-        if (servicio.id === id) {
-          const nuevaCantidad = Math.max(0, cantidad);
-          return {
-            ...servicio,
-            cantidad: nuevaCantidad,
-            subtotal: servicio.costoUnitario * nuevaCantidad,
-          };
-        }
-        return servicio;
-      })
-    );
+    const nuevosServicios = servicios.map((s) => {
+      if (s.id === id) {
+        const nCant = Math.max(0, cantidad);
+        return { ...s, cantidad: nCant, subtotal: s.costoUnitario * nCant };
+      }
+      return s;
+    });
+    setServicios(nuevosServicios);
   };
 
   const actualizarCostoUnitario = (id: number, costo: number) => {
-    setServicios(
-      servicios.map((servicio) => {
-        if (servicio.id === id) {
-          const nuevoCosto = Math.max(0, costo);
-          return {
-            ...servicio,
-            costoUnitario: nuevoCosto,
-            subtotal: nuevoCosto * servicio.cantidad,
-          };
-        }
-        return servicio;
-      })
-    );
+    const nuevosServicios = servicios.map((s) => {
+      if (s.id === id) {
+        const nCosto = Math.max(0, costo);
+        return { ...s, costoUnitario: nCosto, subtotal: nCosto * s.cantidad };
+      }
+      return s;
+    });
+    setServicios(nuevosServicios);
   };
 
-  const calcularTotal = () =>
-    servicios.reduce((total, servicio) => total + servicio.subtotal, 0);
-  const calcularM2Totales = () =>
-    servicios.reduce((total, servicio) => total + servicio.cantidad, 0);
+  const calcularTotal = () => servicios.reduce((t, s) => t + s.subtotal, 0);
+  const calcularM2Totales = () => servicios.reduce((t, s) => t + s.cantidad, 0);
   const serviciosSeleccionados = servicios.filter((s) => s.cantidad > 0);
 
   const cerrarSesion = () => {
     document.cookie = "admin-auth=; path=/; max-age=0";
     router.push("/");
   };
+
+  if (!isLoaded)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Cargando simulador...
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -227,34 +249,32 @@ export default function Presupuesto() {
 
         <div className="flex flex-wrap items-center gap-3 justify-center sm:justify-end w-full sm:w-auto">
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              if (confirm("¿Reiniciar todos los campos?"))
+                window.location.reload();
+            }}
             className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition"
           >
-            <RefreshCw className="w-3 h-4" />
-            Reiniciar
+            <RefreshCw className="w-3 h-4" /> Reiniciar
           </button>
-
           <Link
             href="/"
             className="flex items-center px-3 py-2 border border-slate-200 rounded-lg text-sm hover:bg-slate-50 transition text-slate-800"
-            title="Administración"
           >
             Volver
           </Link>
-
           <button
             onClick={cerrarSesion}
-            className="flex items-center gap-2 px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
+            className="flex items-center gap-2 px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition text-sm"
           >
-            <LogOut className="w-3 h-4" />
-            Cerrar sesión
+            <LogOut className="w-3 h-4" /> Cerrar sesión
           </button>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Tabs de Navegación */}
-        <div className="print:hidden flex flex-wrap gap-2 mb-8 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-full max-w-max sm:w-fit justify-center sm:justify-start">
+        {/* Tabs */}
+        <div className="print:hidden flex flex-wrap gap-2 mb-8 bg-white p-1 rounded-xl shadow-sm border border-slate-200 w-fit">
           <button
             onClick={() => setActiveTab("calcular")}
             className={`px-6 py-2 rounded-lg flex items-center gap-2 font-medium transition-all ${
@@ -288,7 +308,7 @@ export default function Presupuesto() {
         </div>
 
         {activeTab === "config" ? (
-          /* SECCIÓN DE CONFIGURACIÓN DE PRECIOS */
+          /* SECCIÓN DE CONFIGURACIÓN */
           <div className="max-w-5xl mx-auto">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="p-6 border-b border-slate-100 flex items-center justify-between">
@@ -298,65 +318,56 @@ export default function Presupuesto() {
                     Configuración de Precios Unitarios
                   </h3>
                 </div>
-                <p className="text-sm text-slate-500">
-                  Actualiza los precios según la inflación semanal
-                </p>
               </div>
               <div className="p-6">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="text-slate-400 border-b border-slate-100">
-                        <th className="text-left pb-4 font-medium w-12">
-                          Ítem
-                        </th>
-                        <th className="text-left pb-4 font-medium">
-                          Descripción del Servicio
-                        </th>
-                        <th className="text-right pb-4 font-medium w-48">
-                          Costo Unitario ($/m²)
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                      {servicios.map((s, i) => (
-                        <tr key={s.id}>
-                          <td className="py-4">
-                            <span className="bg-slate-800 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold">
-                              {i + 1}
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-slate-400 border-b border-slate-100">
+                      <th className="text-left pb-4 w-12">Ítem</th>
+                      <th className="text-left pb-4">Descripción</th>
+                      <th className="text-right pb-4 w-48">
+                        Costo Unitario ($/m²)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {servicios.map((s, i) => (
+                      <tr key={s.id}>
+                        <td className="py-4">
+                          <span className="bg-slate-800 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold">
+                            {i + 1}
+                          </span>
+                        </td>
+                        <td className="py-4 font-medium text-slate-700">
+                          {s.nombre}
+                        </td>
+                        <td className="py-4">
+                          <div className="relative max-w-xs ml-auto">
+                            <span className="absolute left-3 top-2.5 text-slate-400 font-bold">
+                              $
                             </span>
-                          </td>
-                          <td className="py-4 font-medium text-slate-700 pr-4">
-                            {s.nombre}
-                          </td>
-                          <td className="py-4">
-                            <div className="relative max-w-xs ml-auto">
-                              <span className="absolute left-3 top-3 text-slate-400 font-bold">
-                                $
-                              </span>
-                              <input
-                                type="number"
-                                value={s.costoUnitario || ""}
-                                onChange={(e) =>
-                                  actualizarCostoUnitario(
-                                    s.id,
-                                    parseFloat(e.target.value) || 0
-                                  )
-                                }
-                                className="w-full pl-8 pr-4 py-2 border border-slate-200 rounded-lg text-right font-bold text-slate-800 focus:ring-2 focus:ring-slate-800 outline-none"
-                                placeholder="0.00"
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                            <input
+                              type="number"
+                              value={s.costoUnitario || ""}
+                              onChange={(e) =>
+                                actualizarCostoUnitario(
+                                  s.id,
+                                  parseFloat(e.target.value) || 0
+                                )
+                              }
+                              className="w-full pl-8 pr-4 py-2 border border-slate-200 rounded-lg text-right font-bold focus:ring-2 focus:ring-slate-800 outline-none"
+                              placeholder="0.00"
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
                 <div className="mt-6 flex justify-end gap-3">
                   <button
-                    onClick={() => setActiveTab("calcular")}
-                    className="px-6 py-3 bg-slate-800 text-white rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-slate-700 transition-colors"
+                    onClick={guardarYContinuar}
+                    className="px-6 py-3 bg-slate-800 text-white rounded-lg font-bold flex items-center gap-2 hover:bg-slate-700"
                   >
                     <CheckCircle className="w-5 h-5" /> Guardar y Continuar
                   </button>
@@ -365,518 +376,242 @@ export default function Presupuesto() {
             </div>
           </div>
         ) : activeTab === "calcular" ? (
+          /* SECCIÓN DE CÁLCULO */
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Columna Izquierda: Imagen 1 y 2 combinadas */}
             <div className="lg:col-span-2 space-y-8">
-              {/* SECCIÓN 1: Servicios de ObraLista */}
-              <section className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-slate-700" />
-                    <h3 className="font-bold text-slate-800">
-                      Servicios de Obra Lista
-                    </h3>
-                  </div>
+              <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="font-bold text-slate-800 flex items-center gap-2">
+                    <FileText className="w-5 h-5" /> Servicios de Obra Lista
+                  </h3>
                   <button
                     onClick={() => setActiveTab("config")}
-                    className="text-sm text-slate-600 hover:text-slate-800 flex items-center gap-1"
+                    className="text-sm text-blue-600 hover:underline flex items-center gap-1"
                   >
                     <Edit2 className="w-4 h-4" /> Editar Precios
                   </button>
                 </div>
-                <div className="p-6">
-                  <p className="text-sm text-slate-500 mb-6">
-                    Ingrese las cantidades en metros cuadrados
-                  </p>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="text-slate-400 border-b border-slate-100">
-                          <th className="text-left pb-4 font-medium">Ítem</th>
-                          <th className="text-left pb-4 font-medium">
-                            Descripción del Trabajo
-                          </th>
-                          <th className="text-right pb-4 font-medium">
-                            Costo Unitario
-                          </th>
-                          <th className="text-center pb-4 font-medium">
-                            Cantidad (m²)
-                          </th>
-                          <th className="text-right pb-4 font-medium">
-                            Subtotal
-                          </th>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-slate-400 border-b border-slate-100 text-left">
+                        <th className="pb-4">Ítem</th>
+                        <th className="pb-4">Descripción</th>
+                        <th className="pb-4 text-right">Costo Unit.</th>
+                        <th className="pb-4 text-center">Cant. (m²)</th>
+                        <th className="pb-4 text-right">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                      {servicios.map((s, i) => (
+                        <tr key={s.id}>
+                          <td className="py-4">
+                            <span className="bg-slate-800 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px]">
+                              {i + 1}
+                            </span>
+                          </td>
+                          <td className="py-4 font-medium text-slate-700">
+                            {s.nombre}
+                          </td>
+                          <td className="py-4 text-right text-slate-500">
+                            ${s.costoUnitario.toLocaleString()}
+                          </td>
+                          <td className="py-4 text-center">
+                            <input
+                              type="number"
+                              value={s.cantidad || ""}
+                              onChange={(e) =>
+                                actualizarCantidad(
+                                  s.id,
+                                  parseFloat(e.target.value) || 0
+                                )
+                              }
+                              className="w-16 border border-slate-200 rounded p-1 text-center"
+                            />
+                          </td>
+                          <td className="py-4 text-right font-bold text-slate-800">
+                            ${s.subtotal.toLocaleString()}
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-50">
-                        {servicios.map((s, i) => (
-                          <tr key={s.id}>
-                            <td className="py-4">
-                              <span className="bg-slate-800 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold">
-                                {i + 1}
-                              </span>
-                            </td>
-                            <td className="py-4 font-medium text-slate-700">
-                              {s.nombre}
-                            </td>
-                            <td className="py-4 text-right text-slate-500">
-                              {s.costoUnitario > 0 ? (
-                                `$ ${s.costoUnitario.toLocaleString()}/m²`
-                              ) : (
-                                <span className="text-orange-500 text-xs">
-                                  Sin precio
-                                </span>
-                              )}
-                            </td>
-                            <td className="py-4">
-                              <input
-                                type="number"
-                                value={s.cantidad || ""}
-                                onChange={(e) =>
-                                  actualizarCantidad(
-                                    s.id,
-                                    parseInt(e.target.value) || 0
-                                  )
-                                }
-                                className="w-20 mx-auto block border border-slate-200 rounded-md p-1.5 text-center focus:ring-2 focus:ring-slate-800 outline-none"
-                              />
-                            </td>
-                            <td className="py-4 text-right font-bold text-slate-800">
-                              $ {s.subtotal.toLocaleString()}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </section>
 
-              {/* SECCIÓN 2: Datos del Cliente, Condiciones y Observaciones */}
-              <div className="space-y-8">
-                {/* Datos del Cliente */}
-                <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <div className="flex items-center gap-2 mb-6 border-b border-slate-100 pb-4">
-                    <User className="w-5 h-5 text-slate-700" />
-                    <h3 className="font-bold text-slate-800">
-                      Datos del Cliente
-                    </h3>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase">
-                        Nombre / Razón Social
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                        <input
-                          type="text"
-                          placeholder="Nombre del cliente"
-                          value={datosCliente.nombre}
-                          onChange={(e) =>
-                            setDatosCliente({
-                              ...datosCliente,
-                              nombre: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-slate-800"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase">
-                        Dirección de la Obra
-                      </label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                        <input
-                          type="text"
-                          placeholder="Dirección completa"
-                          value={datosCliente.direccion}
-                          onChange={(e) =>
-                            setDatosCliente({
-                              ...datosCliente,
-                              direccion: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-slate-800"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase">
-                        Teléfono
-                      </label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                        <input
-                          type="text"
-                          placeholder="+54 11 1234-5678"
-                          value={datosCliente.telefono}
-                          onChange={(e) =>
-                            setDatosCliente({
-                              ...datosCliente,
-                              telefono: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-slate-800"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase">
-                        Email
-                      </label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-                        <input
-                          type="email"
-                          placeholder="cliente@email.com"
-                          value={datosCliente.email}
-                          onChange={(e) =>
-                            setDatosCliente({
-                              ...datosCliente,
-                              email: e.target.value,
-                            })
-                          }
-                          className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-slate-800"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Condiciones de Trabajo */}
-                <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <div className="flex items-center gap-2 mb-4 border-b border-slate-100 pb-4">
-                    <FileText className="w-5 h-5 text-slate-700" />
-                    <h3 className="font-bold text-slate-800">
-                      Condiciones de Trabajo
-                    </h3>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-xl text-xs text-slate-600 space-y-2 border border-slate-100">
-                    <p>
-                      • Los precios incluyen materiales de primera calidad y
-                      mano de obra especializada.
-                    </p>
-                    <p>
-                      • La preparación incluye: lijado, enduido, sellador y mano
-                      de fondo según corresponda.
-                    </p>
-                    <p>
-                      • Los trabajos se realizarán en horario diurno de lunes a
-                      viernes.
-                    </p>
-                    <p>
-                      • El cliente deberá proporcionar acceso a agua y
-                      electricidad.
-                    </p>
-                    <p>
-                      • No incluye: andamios especiales o reparaciones
-                      estructurales.
-                    </p>
-                    <p>
-                      • Forma de pago: 50% al inicio de la obra, 50% a la
-                      finalización.
-                    </p>
-                  </div>
-                </section>
-
-                {/* Observaciones y Validez */}
-                <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1 mb-2">
-                        <Info className="w-3 h-3" /> Observaciones Adicionales
-                      </label>
-                      <textarea
-                        value={observaciones}
-                        onChange={(e) => setObservaciones(e.target.value)}
-                        placeholder="Agregue observaciones específicas..."
-                        className="w-full p-4 border border-slate-200 rounded-lg h-24 text-sm outline-none resize-none focus:ring-2 focus:ring-slate-800"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-500 uppercase mb-2 block">
-                        Validez (días)
-                      </label>
-                      <input
-                        type="number"
-                        value={validezDias}
-                        onChange={(e) =>
-                          setValidezDias(parseInt(e.target.value) || 0)
-                        }
-                        className="w-full p-2 border border-slate-200 rounded-lg text-center font-bold text-slate-700 focus:ring-2 focus:ring-slate-800 outline-none"
-                      />
-                    </div>
-                  </div>
-                </section>
-              </div>
+              {/* Datos del Cliente */}
+              <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
+                  <User className="w-5 h-5" /> Datos del Cliente
+                </h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Nombre"
+                    value={datosCliente.nombre}
+                    onChange={(e) =>
+                      setDatosCliente({
+                        ...datosCliente,
+                        nombre: e.target.value,
+                      })
+                    }
+                    className="p-2 border rounded-lg"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Dirección"
+                    value={datosCliente.direccion}
+                    onChange={(e) =>
+                      setDatosCliente({
+                        ...datosCliente,
+                        direccion: e.target.value,
+                      })
+                    }
+                    className="p-2 border rounded-lg"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Teléfono"
+                    value={datosCliente.telefono}
+                    onChange={(e) =>
+                      setDatosCliente({
+                        ...datosCliente,
+                        telefono: e.target.value,
+                      })
+                    }
+                    className="p-2 border rounded-lg"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={datosCliente.email}
+                    onChange={(e) =>
+                      setDatosCliente({
+                        ...datosCliente,
+                        email: e.target.value,
+                      })
+                    }
+                    className="p-2 border rounded-lg"
+                  />
+                </div>
+              </section>
             </div>
 
-            {/* Columna Derecha: Resumen Sticky */}
+            {/* Sidebar Resumen */}
             <div className="lg:col-span-1">
               <div className="sticky top-8 space-y-4">
-                <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-xl">
-                  <div className="flex items-center gap-2 mb-6 opacity-60 text-sm">
-                    <Calculator className="w-4 h-4" /> Resumen del Presupuesto
-                  </div>
-                  <div className="space-y-4 mb-8">
-                    {serviciosSeleccionados.length > 0 ? (
-                      serviciosSeleccionados.map((s) => (
-                        <div
-                          key={s.id}
-                          className="flex justify-between text-sm border-b border-white/10 pb-2"
-                        >
-                          <span className="opacity-70 text-xs">{s.nombre}</span>
-                          <span className="font-bold">
-                            $ {s.subtotal.toLocaleString()}
-                          </span>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-sm opacity-60 text-center py-4">
-                        No hay servicios seleccionados
-                      </p>
-                    )}
-                  </div>
-                  <div className="border-t border-white/20 pt-4 space-y-4">
-                    <div className="flex justify-between text-xs opacity-60">
-                      <span>Total m² a trabajar</span>
-                      <span>{calcularM2Totales().toFixed(2)} m²</span>
-                    </div>
-                    <div className="flex justify-between items-end">
-                      <span className="text-2xl font-black tracking-tighter">
-                        TOTAL
-                      </span>
-                      <span className="text-3xl font-black text-emerald-400">
-                        $ {calcularTotal().toLocaleString()}
-                      </span>
-                    </div>
-                    {calcularTotal() > 0 && (
-                      <div className="flex items-center gap-2 text-[10px] text-emerald-400 bg-emerald-400/10 p-2 rounded-lg mt-4">
-                        <CheckCircle className="w-3 h-3" /> Presupuesto
-                        calculado correctamente
+                <div className="bg-slate-900 rounded-3xl p-6 text-white shadow-xl">
+                  <h4 className="text-sm opacity-60 mb-4">Resumen</h4>
+                  <div className="space-y-3 mb-6 max-h-60 overflow-y-auto pr-2">
+                    {serviciosSeleccionados.map((s) => (
+                      <div
+                        key={s.id}
+                        className="flex justify-between text-xs border-b border-white/10 pb-2"
+                      >
+                        <span className="opacity-70">
+                          {s.nombre.substring(0, 30)}...
+                        </span>
+                        <span className="font-bold">
+                          ${s.subtotal.toLocaleString()}
+                        </span>
                       </div>
-                    )}
+                    ))}
+                  </div>
+                  <div className="border-t border-white/20 pt-4">
+                    <div className="flex justify-between items-end">
+                      <span className="text-xl font-black">TOTAL</span>
+                      <span className="text-2xl font-black text-emerald-400">
+                        ${calcularTotal().toLocaleString()}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <button
                   onClick={() => setActiveTab("ver")}
-                  className="w-full py-4 bg-slate-800 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-700 transition-colors shadow-lg"
+                  className="w-full py-4 bg-slate-800 text-white rounded-xl font-bold flex items-center justify-center gap-2"
                 >
                   <FileText className="w-5 h-5" /> Ver Presupuesto
-                </button>
-                <button className="w-full py-4 bg-white text-slate-800 border-2 border-slate-200 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors">
-                  <Save className="w-5 h-5" /> Guardar
                 </button>
               </div>
             </div>
           </div>
         ) : (
-          /* SECCIÓN 3: Vista Previa del Presupuesto */
+          /* VISTA DE IMPRESIÓN */
           <div className="max-w-4xl mx-auto">
             <div className="flex justify-end gap-3 mb-6 no-print">
               <button
                 onClick={() => window.print()}
-                className="px-6 py-2 bg-slate-900 text-white rounded-lg flex items-center gap-2 font-medium"
+                className="px-6 py-2 bg-slate-900 text-white rounded-lg flex items-center gap-2"
               >
-                <Printer className="w-4 h-4" /> Imprimir / Guardar PDF
+                <Printer className="w-4 h-4" /> Imprimir / PDF
               </button>
               <button
                 onClick={() => setActiveTab("calcular")}
-                className="print:hidden px-6 py-2 border border-slate-200 bg-white rounded-lg font-medium"
+                className="px-6 py-2 border border-slate-200 bg-white rounded-lg"
               >
                 Volver
               </button>
             </div>
-
-            <div className="bg-white p-12 shadow-2xl border border-slate-200 rounded-xl min-h-250">
-              <div className="flex justify-between items-start mb-12">
+            <div className="bg-white p-12 shadow-2xl border border-slate-200 rounded-xl">
+              <div className="flex justify-between mb-8">
                 <div>
-                  <h2 className="text-3xl font-black text-slate-800 tracking-tighter uppercase">
-                    Presupuesto
-                  </h2>
-                  <p className="text-slate-500 text-sm">
-                    Servicios de Obra Lista para Obras Civiles
+                  <h2 className="text-2xl font-black uppercase">Presupuesto</h2>
+                  <p className="text-slate-500">
+                    Obra Lista - Servicios Profesionales
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className="text-xs text-slate-400 font-bold uppercase">
-                    N° Presupuesto
+                <div className="text-right text-sm">
+                  <p className="font-bold">
+                    N° PRES-{(Math.random() * 100000).toFixed(0)}
                   </p>
-                  <p className="text-lg font-black text-slate-800">
-                    PRES-{Math.floor(Math.random() * 900000) + 100000}
-                  </p>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Fecha:{" "}
-                    {new Date().toLocaleDateString("es-AR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </p>
+                  <p>{new Date().toLocaleDateString()}</p>
                 </div>
               </div>
-
-              <div className="bg-slate-50 p-6 rounded-xl mb-12 grid grid-cols-2 gap-8 border border-slate-100">
+              <div className="grid grid-cols-2 gap-8 mb-8 bg-slate-50 p-4 rounded-lg">
                 <div>
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">
-                    Datos del Cliente
-                  </h4>
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-slate-400 uppercase">
-                      Cliente
-                    </p>
-                    <p className="text-sm font-bold text-slate-800">
-                      {datosCliente.nombre || "Sin especificar"}
-                    </p>
-                  </div>
-                  <div className="space-y-1 mt-4">
-                    <p className="text-xs font-bold text-slate-400 uppercase">
-                      Teléfono
-                    </p>
-                    <p className="text-sm text-slate-700">
-                      {datosCliente.telefono || "-"}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 opacity-0">
-                    .
-                  </h4>
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-slate-400 uppercase">
-                      Dirección de la Obra
-                    </p>
-                    <p className="text-sm font-bold text-slate-800">
-                      {datosCliente.direccion || "Sin especificar"}
-                    </p>
-                  </div>
-                  <div className="space-y-1 mt-4">
-                    <p className="text-xs font-bold text-slate-400 uppercase">
-                      Email
-                    </p>
-                    <p className="text-sm text-slate-700">
-                      {datosCliente.email || "-"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-12">
-                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-2">
-                  Detalle de Servicios
-                </h4>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-slate-400 border-b border-slate-100">
-                      <th className="text-left py-3 font-medium">Ítem</th>
-                      <th className="text-left py-3 font-medium">
-                        Descripción
-                      </th>
-                      <th className="text-right py-3 font-medium">
-                        Precio Unit.
-                      </th>
-                      <th className="text-center py-3 font-medium">Cantidad</th>
-                      <th className="text-right py-3 font-medium">Subtotal</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-50">
-                    {serviciosSeleccionados.map((s, i) => (
-                      <tr key={s.id}>
-                        <td className="py-4 text-slate-400">{i + 1}</td>
-                        <td className="py-4 font-bold text-slate-800">
-                          {s.nombre}
-                        </td>
-                        <td className="py-4 text-right text-slate-500">
-                          $ {s.costoUnitario.toLocaleString()}/m²
-                        </td>
-                        <td className="py-4 text-center text-slate-700">
-                          {s.cantidad} m²
-                        </td>
-                        <td className="py-4 text-right font-black text-slate-800">
-                          $ {s.subtotal.toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                    <tr className="border-t-2 border-slate-800">
-                      <td
-                        colSpan={4}
-                        className="py-6 text-right font-black text-slate-800 text-lg uppercase"
-                      >
-                        Total
-                      </td>
-                      <td className="py-6 text-right font-black text-slate-800 text-xl">
-                        $ {calcularTotal().toLocaleString()}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="mb-12">
-                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
-                  Condiciones de Trabajo
-                </h4>
-                <div className="text-[11px] text-slate-500 space-y-2 leading-relaxed max-w-2xl">
-                  <p>
-                    • Los precios incluyen materiales de primera calidad y mano
-                    de obra especializada.
-                  </p>
-                  <p>
-                    • La preparación incluye: lijado, enduido, sellador y mano
-                    de fondo según corresponda.
-                  </p>
-                  <p>
-                    • Los trabajos se realizarán en horario diurno de lunes a
-                    viernes.
-                  </p>
-                  <p>
-                    • El cliente deberá proporcionar acceso a agua y
-                    electricidad.
-                  </p>
-                  <p>
-                    • No incluye: andamios especiales o reparaciones
-                    estructurales.
-                  </p>
-                  <p>
-                    • Forma de pago: 50% al inicio de la obra, 50% a la
-                    finalización.
-                  </p>
-                </div>
-              </div>
-
-              {observaciones && (
-                <div className="mb-12">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
-                    Observaciones Adicionales
-                  </h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {observaciones}
-                  </p>
-                </div>
-              )}
-
-              <div className="mt-20 pt-12 border-t border-slate-100 flex justify-between items-end">
-                <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">
-                    Validez del presupuesto
-                  </p>
-                  <p className="text-xs font-bold text-slate-800">
-                    {validezDias} días (hasta el{" "}
-                    {new Date(
-                      Date.now() + validezDias * 24 * 60 * 60 * 1000
-                    ).toLocaleDateString("es-AR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                    )
-                  </p>
-                </div>
-                <div className="w-48 border-t border-slate-300 pt-2 text-center">
                   <p className="text-[10px] font-bold text-slate-400 uppercase">
-                    Firma y Aclaración
+                    Cliente
+                  </p>
+                  <p className="font-bold">{datosCliente.nombre || "---"}</p>
+                  <p className="text-sm">{datosCliente.telefono}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">
+                    Obra en:
+                  </p>
+                  <p className="font-bold">{datosCliente.direccion || "---"}</p>
+                  <p className="text-sm">{datosCliente.email}</p>
+                </div>
+              </div>
+              <table className="w-full text-sm mb-8">
+                <thead className="border-b-2 border-slate-800">
+                  <tr className="text-left">
+                    <th className="py-2">Servicio</th>
+                    <th className="text-right">Precio Unit.</th>
+                    <th className="text-center">Cant.</th>
+                    <th className="text-right">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {serviciosSeleccionados.map((s) => (
+                    <tr key={s.id}>
+                      <td className="py-3">{s.nombre}</td>
+                      <td className="text-right">
+                        ${s.costoUnitario.toLocaleString()}
+                      </td>
+                      <td className="text-center">{s.cantidad}</td>
+                      <td className="text-right font-bold">
+                        ${s.subtotal.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex justify-end">
+                <div className="w-64 bg-slate-900 text-white p-4 rounded-lg text-right">
+                  <p className="text-xs opacity-60">Total Final</p>
+                  <p className="text-2xl font-black">
+                    ${calcularTotal().toLocaleString()}
                   </p>
                 </div>
               </div>
