@@ -411,7 +411,7 @@ export default function HomeClient() {
           {/* Botones */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
-              href="https://wa.me/542612402021?text=Hola!%20Quiero%20solicitar%20un%20presupuesto"
+              href="https://wa.me/542615436883?text=Hola!%20Quiero%20solicitar%20un%20presupuesto"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-700 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
