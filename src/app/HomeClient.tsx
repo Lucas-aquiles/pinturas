@@ -114,7 +114,7 @@ export default function HomeClient() {
           {/* Buttons */}
           <div className="flex gap-6 mb-16">
             <a
-              href="https://wa.me/542612402021?text=Hola!%20Quiero%20solicitar%20un%20presupuesto"
+              href="https://wa.me/542615436883?text=Hola!%20Quiero%20solicitar%20un%20presupuesto"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-blue-900 hover:bg-blue-600 text-white font-semibold px-10 py-5 rounded-xl transition-all shadow-lg text-lg w-full sm:w-auto justify-center"
